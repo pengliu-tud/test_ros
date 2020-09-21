@@ -12,6 +12,7 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 {
     try
     {
+        ROS_INFO("%f", msg->header.stamp);
         cv::imshow("view", cv_bridge::toCvShare(msg, "bgr8")->image);
         cv::waitKey(30);
     }
@@ -29,7 +30,7 @@ int main(int argc, char **argv)
     cv::namedWindow("view");
     cv::startWindowThread();
     image_transport::ImageTransport it(nh);
-    image_transport::Subscriber sub = it.subscribe("/stereo/left/image_raw", 100, imageCallback);
+    image_transport::Subscriber sub = it.subscribe("/mypublisher/left", 100, imageCallback);
 
 
     ros::spin();

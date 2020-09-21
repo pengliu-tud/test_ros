@@ -41,12 +41,15 @@ include_directories(
 )
 
 
-add_executable(receive_images src/receive_images.cpp)
-target_link_libraries(receive_images ${catkin_LIBRARIES} ${OpenCV_INCLUDE_DIRS})
+#add_executable(receive_images src/receive_images.cpp)
+#target_link_libraries(receive_images ${catkin_LIBRARIES} ${OpenCV_INCLUDE_DIRS})
 #add_dependencies(receive_images beginner_tutorials_generate_messages_cpp)
 
 add_executable(show_images src/show_images.cpp)
 target_link_libraries(show_images ${catkin_LIBRARIES} ${OpenCV_INCLUDE_DIRS})
 
-add_executable(show_images_right src/show_images_right.cpp)
-target_link_libraries(show_images_right ${catkin_LIBRARIES} ${OpenCV_INCLUDE_DIRS})
+add_executable(show_images_merged src/show_images_merged.cpp)
+target_link_libraries(show_images_merged ${catkin_LIBRARIES} ${OpenCV_INCLUDE_DIRS})
+
+add_executable(image_publisher src/image_publisher.cpp)
+target_link_libraries(image_publisher ${catkin_LIBRARIES} ${OpenCV_INCLUDE_DIRS})

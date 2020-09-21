@@ -1,11 +1,4 @@
-//
-// Created by lyp on 14.09.20.
-//
 
-#include "show_images_right.h"
-//
-// Created by lyp on 14.09.20.
-//
 
 #include "show_images.h"
 #include <ros/ros.h>
@@ -25,6 +18,7 @@ void imageCallback(const sensor_msgs::ImageConstPtr& left_msg, const sensor_msgs
 {
     try
     {
+        ROS_INFO("111");
         auto img1 = cv_bridge::toCvShare(left_msg, "bgr8");
         auto img2 = cv_bridge::toCvShare(right_msg, "bgr8");
 //        cv::imshow("view1", img1->image);
@@ -35,7 +29,7 @@ void imageCallback(const sensor_msgs::ImageConstPtr& left_msg, const sensor_msgs
         cv::addWeighted(img1->image, 0.5, img2->image, 0.5, 0, img_merged);
         cv::imshow("merged", img_merged);
 
-        cv::imshow("source", cv_bridge::toCvShare(right_msg, "bgr8")->image);
+//        cv::imshow("source", cv_bridge::toCvShare(right_msg, "bgr8")->image);
 
 //        cv::waitKey(30);
     }
@@ -47,7 +41,7 @@ void imageCallback(const sensor_msgs::ImageConstPtr& left_msg, const sensor_msgs
 
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "image_listener_right");
+    ros::init(argc, argv, "image_listener_merged");
     ros::NodeHandle nh;
 
 //    cv::namedWindow("view1");
@@ -60,13 +54,15 @@ int main(int argc, char **argv)
     message_filters::Subscriber<sensor_msgs::Image> sub_left(nh, "/stereo/left/image_raw", 100);
     message_filters::Subscriber<sensor_msgs::Image> sub_right(nh, "/stereo/right/image_raw", 100);
 
-    message_filters::Subscriber<sensor_msgs::Image> source(nh, "/image_publisher_1600621054318491934/image_raw", 100);
+//    message_filters::Subscriber<sensor_msgs::Image> source(nh, "/image_publisher_1600621054318491934/image_raw", 100);
 
     typedef sync_policies::ApproximateTime<Image, Image, Image> MySyncPolicy;
     // ApproximateTime takes a queue size as its constructor argument, hence MySyncPolicy(10)
     Synchronizer<MySyncPolicy> sync(MySyncPolicy(10), sub_left, sub_right);
 //    sync.registerCallback([](auto && PH1, auto && PH2) { return imageCallback(PH1, PH2); });
     sync.registerCallback(boost::bind(&imageCallback, _1, _2));
+    ROS_INFO("222");
+
     ros::spin();
     cv::destroyWindow("merged");
 }
